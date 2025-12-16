@@ -67,6 +67,7 @@ export function TrainingManagement({
     setIsFormOpen(false);
   };
 
+  /*
   const handleUpdate = (training: Training, departmentIds: string[]) => {
     setTrainings(trainings.map(t => (t.id === training.id ? training : t)));
 
@@ -81,6 +82,85 @@ export function TrainingManagement({
     setEditingTraining(null);
     setIsFormOpen(false);
   };
+*/
+
+  const handleUpdate = (training: Training, departmentIds: string[]) => {
+    // 1️⃣ 更新 training 基本信息
+    setTrainings(trainings.map(t => (t.id === training.id ? training : t)));
+
+    // 2️⃣ 原有 departmentIds
+    const oldDeptIds = training_departments
+      .filter(td => td.training_id === training.id)
+      .map(td => td.departments_id);
+
+    // 3️⃣ 新增 / 移除的 department
+    const addedDeptIds = departmentIds.filter(id => !oldDeptIds.includes(id));
+    const removedDeptIds = oldDeptIds.filter(id => !departmentIds.includes(id));
+
+    // 4️⃣ 判断哪些 department 可以被安全移除
+    const removableDeptIds = removedDeptIds.filter(deptId => {
+      const deptEmployeeIds = employees
+        .filter(e => e.departmentId === deptId)
+        .map(e => e.id);
+
+      const deptParticipants = participants.filter(
+        p =>
+          p.trainingId === training.id &&
+          deptEmployeeIds.includes(p.employeeId)
+      );
+
+      // 规则：全部 pending & not attended 才能删除
+      return deptParticipants.every(
+        p => !p.attended && !p.acknowledgment
+      );
+    });
+
+    // 5️⃣ 更新 training_departments
+    const remainingTrainingDepartments = training_departments.filter(td => {
+      if (td.training_id !== training.id) return true;
+      return !removableDeptIds.includes(td.departments_id);
+    });
+
+    const newTrainingDepartments = addedDeptIds.map(deptId => ({
+      training_id: training.id,
+      departments_id: deptId,
+    }));
+
+    setTraining_departments([
+      ...remainingTrainingDepartments,
+      ...newTrainingDepartments,
+    ]);
+
+    // 6️⃣ 新增 department → 自动加 participants
+    const addedParticipants: Participant[] = employees
+      .filter(e => addedDeptIds.includes(e.departmentId))
+      .map(e => ({
+        trainingId: training.id,
+        employeeId: e.id,
+        attended: false,
+        acknowledgment: false,
+      }));
+
+    // 7️⃣ 移除 department → 删除对应 participants（只限 removable）
+    const remainingParticipants = participants.filter(p => {
+      if (p.trainingId !== training.id) return true;
+
+      const emp = employees.find(e => e.id === p.employeeId);
+      if (!emp) return true;
+
+      return !removableDeptIds.includes(emp.departmentId);
+    });
+
+    setParticipants([
+      ...remainingParticipants,
+      ...addedParticipants,
+    ]);
+
+    // 8️⃣ 收尾
+    setEditingTraining(null);
+    setIsFormOpen(false);
+  };
+
 
   const handleDelete = (id: string) => {
     if (confirm('Are you sure you want to delete this training?')) {
