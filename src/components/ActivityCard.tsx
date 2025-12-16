@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Calendar, Clock, Users, CheckCircle, XCircle } from 'lucide-react';
-import { Activity, Employee, Department, Participant } from '../App';
+import { Training, Employee, Department, Participant } from '../App';
 
 interface ActivityCardProps {
-  activity: Activity;
+  activity: Training;
   employees: Employee[];
   departments: Department[];
   participants: Participant[];

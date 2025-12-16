@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { LogOut, Calendar, Users, Building2 } from 'lucide-react';
-import { Activity, Employee, Department, Participant } from '../App';
+import { Training, Employee, Department, Participant } from '../App';
 import { ActivityManagement } from './ActivityManagement';
 import { EmployeeManagement } from './EmployeeManagement';
 import { DepartmentManagement } from './DepartmentManagement';
 
 interface AdminDashboardProps {
-  activities: Activity[];
-  setActivities: (activities: Activity[]) => void;
+  activities: Training[];
+  setActivities: (activities: Training[]) => void;
   employees: Employee[];
   setEmployees: (employees: Employee[]) => void;
   departments: Department[];

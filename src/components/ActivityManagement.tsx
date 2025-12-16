@@ -1,11 +1,11 @@
 import { useState, useMemo } from 'react';
 import { Plus, Edit2, Trash2, Search, Users, CheckCircle } from 'lucide-react';
-import { Activity, Employee, Department, Participant } from '../App';
+import { Training, Employee, Department, Participant } from '../App';
 import { ActivityFormModal } from './ActivityFormModal';
 
 interface ActivityManagementProps {
-  activities: Activity[];
-  setActivities: (activities: Activity[]) => void;
+  activities: Training[];
+  setActivities: (activities: Training[]) => void;
   employees: Employee[];
   departments: Department[];
   participants: Participant[];
@@ -21,7 +21,7 @@ export function ActivityManagement({
   setParticipants,
 }: ActivityManagementProps) {
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [editingActivity, setEditingActivity] = useState<Activity | null>(null);
+  const [editingActivity, setEditingActivity] = useState<Training | null>(null);
   const [expandedActivity, setExpandedActivity] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterMode, setFilterMode] = useState<'all' | 'pending' | 'notAttended'>('all');
@@ -33,8 +33,8 @@ export function ActivityManagement({
     );
   }, [activities, searchQuery]);
 
-  const handleCreate = (activity: Omit<Activity, 'id'>) => {
-    const newActivity: Activity = {
+  const handleCreate = (activity: Omit<Training, 'id'>) => {
+    const newActivity: Training = {
       ...activity,
       id: Date.now().toString(),
     };
@@ -56,7 +56,7 @@ export function ActivityManagement({
     setIsFormOpen(false);
   };
 
-  const handleUpdate = (activity: Activity) => {
+  const handleUpdate = (activity: Training) => {
     setActivities(activities.map(a => (a.id === activity.id ? activity : a)));
     setEditingActivity(null);
     setIsFormOpen(false);
@@ -69,7 +69,7 @@ export function ActivityManagement({
     }
   };
 
-  const handleEdit = (activity: Activity) => {
+  const handleEdit = (activity: Training) => {
     setEditingActivity(activity);
     setIsFormOpen(true);
   };

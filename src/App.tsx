@@ -19,7 +19,7 @@ export interface Employee {
   password: string;
 }
 
-export interface Activity {
+export interface Training {
   id: string;
   name: string;
   date: string;
@@ -56,7 +56,7 @@ export default function App() {
     { id: '6', name: 'Lisa', email: 'lisa@example.com', departmentId: '1', position: 'Frontend Developer' , isAdmin: false, password: '345' },
   ]);
 
-  const [activities, setActivities] = useState<Activity[]>([
+  const [activities, setActivities] = useState<Training[]>([
     {
       id: '1',
       name: 'React Best Practices Workshop',

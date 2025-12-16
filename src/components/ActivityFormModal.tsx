@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
-import { Activity, Department } from '../App';
+import { Training, Department } from '../App';
 
 interface ActivityFormModalProps {
-  activity: Activity | null;
+  activity: Training | null;
   departments: Department[];
   onSubmit: (activity: any) => void;
   onClose: () => void;

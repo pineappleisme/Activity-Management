@@ -1,10 +1,10 @@
-import { Activity } from '../App';
+import { Training } from '../App';
 import { ActivityCard } from './ActivityCard';
 
 interface ActivityListProps {
-  activities: Activity[];
+  activities: Training[];
   onDelete: (id: string) => void;
-  onEdit: (activity: Activity) => void;
+  onEdit: (activity: Training) => void;
   //onStatusChange: (id: string, status: Activity['status']) => void;
 }
 

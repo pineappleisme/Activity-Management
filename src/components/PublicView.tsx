@@ -1,10 +1,10 @@
 import { useState, useMemo } from 'react';
 import { Search, LogIn, Calendar, Users, ArrowUpDown } from 'lucide-react';
-import { Activity, Employee, Department, Participant } from '../App';
+import { Training, Employee, Department, Participant } from '../App';
 import { ActivityCard } from './ActivityCard';
 
 interface PublicViewProps {
-  activities: Activity[];
+  activities: Training[];
   employees: Employee[];
   departments: Department[];
   participants: Participant[];
