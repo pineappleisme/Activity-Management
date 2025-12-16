@@ -35,7 +35,14 @@ export function TrainingFormModal({ training, training_departments, departments,
     }
   }, [training, training_departments]);
 
-  const handleSubmit = () => {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (formData.departmentIds.length === 0) {
+      alert('Please select at least one department');
+      return;
+    }
+
     if (training) {
       onSubmit(
         {
@@ -54,11 +61,12 @@ export function TrainingFormModal({ training, training_departments, departments,
           date: formData.date,
           time: formData.time,
           description: formData.description,
-        } as any,
+        },
         formData.departmentIds
       );
     }
   };
+
 
   
   const toggleDepartment = (deptId: string) => {
