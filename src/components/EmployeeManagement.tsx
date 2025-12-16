@@ -94,9 +94,10 @@ export function EmployeeManagement({ employees, setEmployees, departments }: Emp
 
                   {employeeDepartment && (
                     <span
-                      className="px-2 py-1 rounded-full text-white text-xs"
-                      style={{ backgroundColor: employeeDepartment.color }}
-                    >
+                      className="px-2 py-1 rounded-full text-xs
+                        border border-gray-400
+                        text-gray-700 bg-white"
+                      >
                       {employeeDepartment.name}
                     </span>
                   )}
