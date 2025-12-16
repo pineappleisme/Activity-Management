@@ -6,7 +6,7 @@ import { AdminDashboard } from './components/AdminDashboard';
 export interface Department {
   id: string;
   name: string;
-  color: string;
+  //color: string;
 }
 
 export interface Employee {
@@ -24,12 +24,16 @@ export interface Training {
   name: string;
   date: string;
   time: string;
-  departmentIds: string[];  // Changed from departmentId to departmentIds (multiple departments)
   description: string;
 }
 
+export interface Training_departments {
+  training_id: string;
+  departments_id: string;
+}
+
 export interface Participant {
-  activityId: string;
+  trainingId: string;
   employeeId: string;
   attended: boolean;
   acknowledgment: boolean;
@@ -41,10 +45,10 @@ export default function App() {
 
   // Sample data
   const [departments, setDepartments] = useState<Department[]>([
-    { id: '1', name: 'Engineering', color: '#F59A6A' },
-    { id: '2', name: 'Marketing', color: '#F28B82' },
-    { id: '3', name: 'Sales', color: '#F4B183' },
-    { id: '4', name: 'HR', color: '#F5C09A' },
+    { id: '1', name: 'Engineering' },
+    { id: '2', name: 'Marketing' },
+    { id: '3', name: 'Sales' },
+    { id: '4', name: 'HR' },
   ]);
 
   const [employees, setEmployees] = useState<Employee[]>([
@@ -56,13 +60,12 @@ export default function App() {
     { id: '6', name: 'Lisa', email: 'lisa@example.com', departmentId: '1', position: 'Frontend Developer' , isAdmin: false, password: '345' },
   ]);
 
-  const [activities, setActivities] = useState<Training[]>([
+  const [trainings, setTrainings] = useState<Training[]>([
     {
       id: '1',
       name: 'React Best Practices Workshop',
       date: '2025-12-10',
       time: '14:00',
-      departmentIds: ['1'],  // Changed from departmentId to departmentIds
       description: 'Learn modern React patterns and best practices',
     },
     {
@@ -70,7 +73,6 @@ export default function App() {
       name: 'Leadership Training',
       date: '2025-12-08',
       time: '10:00',
-      departmentIds: ['2'],  // Changed from departmentId to departmentIds
       description: 'Develop your leadership skills',
     },
     {
@@ -78,20 +80,25 @@ export default function App() {
       name: 'Sales Strategy Meeting',
       date: '2025-12-15',
       time: '09:00',
-      departmentIds: ['3'],  // Changed from departmentId to departmentIds
       description: 'Q4 sales strategy and planning',
     },
   ]);
 
+  const [training_departments, setTraining_departments] = useState<Training_departments[]>([
+    { training_id: '1', departments_id: '1' },
+    { training_id: '2', departments_id: '2' },
+    { training_id: '3', departments_id: '3' },
+  ]);
+
   const [participants, setParticipants] = useState<Participant[]>([
-    { activityId: '1', employeeId: '1', attended: true, acknowledgment: true },
-    { activityId: '1', employeeId: '2', attended: false, acknowledgment: true },
-    { activityId: '1', employeeId: '6', attended: true, acknowledgment: true },
-    { activityId: '2', employeeId: '1', attended: false, acknowledgment: false },
-    { activityId: '2', employeeId: '2', attended: false, acknowledgment: true },
-    { activityId: '2', employeeId: '3', attended: false, acknowledgment: true },
-    { activityId: '2', employeeId: '4', attended: false, acknowledgment: false },
-    { activityId: '3', employeeId: '4', attended: false, acknowledgment: false },
+    { trainingId: '1', employeeId: '1', attended: true, acknowledgment: true },
+    { trainingId: '1', employeeId: '2', attended: false, acknowledgment: true },
+    { trainingId: '1', employeeId: '6', attended: true, acknowledgment: true },
+    { trainingId: '2', employeeId: '1', attended: false, acknowledgment: false },
+    { trainingId: '2', employeeId: '2', attended: false, acknowledgment: true },
+    { trainingId: '2', employeeId: '3', attended: false, acknowledgment: true },
+    { trainingId: '2', employeeId: '4', attended: false, acknowledgment: false },
+    { trainingId: '3', employeeId: '4', attended: false, acknowledgment: false },
   ]);
 
   const handleLogin = (username: string, password: string) => {
@@ -115,7 +122,8 @@ export default function App() {
       {!isAdmin ? (
         <>
           <PublicView
-            activities={activities}
+            trainings={trainings}
+            training_departments={training_departments}
             employees={employees}
             departments={departments}
             participants={participants}
@@ -130,8 +138,10 @@ export default function App() {
         </>
       ) : (
         <AdminDashboard
-          activities={activities}
-          setActivities={setActivities}
+          trainings={trainings}
+          setTrainings={setTrainings}
+          training_departments={training_departments}
+          setTraining_departments={setTraining_departments}
           employees={employees}
           setEmployees={setEmployees}
           departments={departments}

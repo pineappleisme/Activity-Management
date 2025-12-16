@@ -1,19 +1,20 @@
 import { useState } from 'react';
 import { Calendar, Clock, Users, CheckCircle, XCircle } from 'lucide-react';
-import { Training, Employee, Department, Participant } from '../App';
+import { Training, Training_departments, Employee, Department, Participant } from '../App';
 
-interface ActivityCardProps {
-  activity: Training;
+interface TrainingCardProps {
+  training: Training;
   employees: Employee[];
   departments: Department[];
   participants: Participant[];
+  training_departments: Training_departments[];
 }
 
-export function ActivityCard({ activity, employees, departments, participants }: ActivityCardProps) {
+export function TrainingCard({ training, employees, departments, participants, training_departments }: TrainingCardProps) {
   const [showParticipants, setShowParticipants] = useState(false);
   const [filterMode, setFilterMode] = useState<'all' | 'pending' | 'notAttended'>('all');
 
-  const activityDepartments = departments.filter(d => activity.departmentIds.includes(d.id));
+  const trainingDepartments = departments.filter(d => training_departments.some(td => td.training_id === training.id && td.departments_id === d.id));
 
   const getStatusIcon = (participant: Participant) => {
     if (participant.attended) {
@@ -33,12 +34,12 @@ export function ActivityCard({ activity, employees, departments, participants }:
     <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow overflow-hidden">
       {/* Header */}
       <div className="bg-gradient-to-r from-orange-500 via-amber-500 to-red-500 p-4">
-        <h2 className="text-white mb-2">{activity.name}</h2>
+        <h2 className="text-white mb-2">{training.name}</h2>
         <div className="flex flex-wrap gap-3 text-white text-sm">
           <div className="flex items-center gap-2">
             <Calendar className="w-4 h-4" />
             <span>
-              {new Date(activity.date).toLocaleDateString('en-US', {
+              {new Date(training.date).toLocaleDateString('en-US', {
                 weekday: 'short',
                 year: 'numeric',
                 month: 'short',
@@ -48,7 +49,7 @@ export function ActivityCard({ activity, employees, departments, participants }:
           </div>
           <div className="flex items-center gap-2">
             <Clock className="w-4 h-4" />
-            <span>{activity.time}</span>
+            <span>{training.time}</span>
           </div>
           <div className="flex items-center gap-2">
             <Users className="w-4 h-4" />
@@ -61,13 +62,14 @@ export function ActivityCard({ activity, employees, departments, participants }:
       <div className="p-4">
         {/* Department */}
         <div className="mb-3">
-          <h3 className="text-gray-700 text-sm mb-2">Department{activityDepartments.length > 1 ? 's' : ''}</h3>
+          <h3 className="text-gray-700 text-sm mb-2">Department{trainingDepartments.length > 1 ? 's' : ''}</h3>
           <div className="flex flex-wrap gap-1">
-            {activityDepartments.map(department => (
+            {trainingDepartments.map(department => (
               <span
                 key={department.id}
-                className="px-2 py-1 rounded-full text-white text-xs"
-                style={{ backgroundColor: department.color }}
+                className="px-2 py-1 rounded-full text-xs
+             border border-gray-400
+             text-gray-700 bg-white"
               >
                 {department.name}
               </span>
@@ -76,10 +78,10 @@ export function ActivityCard({ activity, employees, departments, participants }:
         </div>
 
         {/* Description */}
-        {activity.description && (
+        {training.description && (
           <div className="mb-4">
             <h3 className="text-gray-700 text-sm mb-2">Description</h3>
-            <p className="text-gray-600 text-sm">{activity.description}</p>
+            <p className="text-gray-600 text-sm">{training.description}</p>
           </div>
         )}
 

@@ -1,10 +1,11 @@
 import { useState, useMemo } from 'react';
 import { Search, LogIn, Calendar, Users, ArrowUpDown } from 'lucide-react';
-import { Training, Employee, Department, Participant } from '../App';
-import { ActivityCard } from './ActivityCard';
+import { Training, Training_departments, Employee, Department, Participant } from '../App';
+import { TrainingCard } from './TrainingCard';
 
 interface PublicViewProps {
-  activities: Training[];
+  trainings: Training[];
+  training_departments: Training_departments[];
   employees: Employee[];
   departments: Department[];
   participants: Participant[];
@@ -12,7 +13,8 @@ interface PublicViewProps {
 }
 
 export function PublicView({
-  activities,
+  trainings,
+  training_departments,
   employees,
   departments,
   participants,
@@ -22,24 +24,24 @@ export function PublicView({
   const [dateFilter, setDateFilter] = useState('');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
-  const filteredActivities = useMemo(() => {
-    let filtered = activities.filter(activity => {
-      // Search by activity name or participant name
+  const filteredTrainings = useMemo(() => {
+    let filtered = trainings.filter(training => {
+      // Search by training name or participant name
       const matchesSearch = searchQuery === '' || 
-        activity.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        training.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (() => {
-          const depts = departments.filter(d => activity.departmentIds.includes(d.id));
+          const depts = departments.filter(d => training_departments.some(td => td.training_id === training.id && td.departments_id === d.id));
           return depts.some(dept => dept.name.toLowerCase().includes(searchQuery.toLowerCase()));
         })() ||
         participants
-          .filter(p => p.activityId === activity.id)
+          .filter(p => p.trainingId === training.id)
           .some(p => {
             const employee = employees.find(e => e.id === p.employeeId);
             return employee?.name.toLowerCase().includes(searchQuery.toLowerCase());
           });
 
       // Date filter
-      const matchesDate = dateFilter === '' || activity.date === dateFilter;
+      const matchesDate = dateFilter === '' || training.date === dateFilter;
 
       return matchesSearch && matchesDate;
     });
@@ -52,10 +54,10 @@ export function PublicView({
     });
 
     return filtered;
-  }, [activities, searchQuery, dateFilter, sortOrder, departments, employees, participants]);
+  }, [trainings, training_departments, searchQuery, dateFilter, sortOrder, departments, employees, participants]);
 
-  const totalActivities = activities.length;
-  const upcomingActivities = activities.filter(a => new Date(a.date) >= new Date()).length;
+  const totalTrainings = trainings.length;
+  const upcomingTrainings = trainings.filter(t => new Date(t.date) >= new Date()).length;
 
   return (
     <div className="min-h-screen">
@@ -64,9 +66,9 @@ export function PublicView({
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-gray-900 mb-1">Training Center Activity</h1>
+              <h1 className="text-gray-900 mb-1">Training Center</h1>
               <p className="text-gray-600 text-sm">
-                Explore and track all training activities across departments
+                Explore and track all trainings across departments
               </p>
             </div>
             <button
@@ -86,8 +88,8 @@ export function PublicView({
           <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-4 text-white shadow-md">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-orange-100 text-sm mb-1">Total Activities</p>
-                <p className="text-white">{totalActivities}</p>
+                <p className="text-orange-100 text-sm mb-1">Total Trainings</p>
+                <p className="text-white">{totalTrainings}</p>
               </div>
               <Calendar className="w-10 h-10 text-orange-200" />
             </div>
@@ -96,8 +98,8 @@ export function PublicView({
           <div className="bg-gradient-to-br from-red-500 to-red-600 rounded-xl p-4 text-white shadow-md">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-red-100 text-sm mb-1">Upcoming Events</p>
-                <p className="text-white">{upcomingActivities}</p>
+                <p className="text-red-100 text-sm mb-1">Upcoming Trainings</p>
+                <p className="text-white">{upcomingTrainings}</p>
               </div>
               <Calendar className="w-10 h-10 text-red-200" />
             </div>
@@ -111,7 +113,7 @@ export function PublicView({
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
                 type="text"
-                placeholder="Search by activity name, department, or participant..."
+                placeholder="Search by training name, department, or participant..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
@@ -140,21 +142,22 @@ export function PublicView({
           </div>
         </div>
 
-        {/* Activities */}
+        {/* Trainings */}
         <div className="space-y-4">
-          {filteredActivities.length === 0 ? (
+          {filteredTrainings.length === 0 ? (
             <div className="bg-white rounded-xl shadow-md p-8 text-center">
               <Calendar className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-              <p className="text-gray-500 text-sm">No activities found matching your search criteria</p>
+              <p className="text-gray-500 text-sm">No trainings found matching your search criteria</p>
             </div>
           ) : (
-            filteredActivities.map(activity => (
-              <ActivityCard
-                key={activity.id}
-                activity={activity}
+            filteredTrainings.map(training => (
+              <TrainingCard
+                key={training.id}
+                training={training}
                 employees={employees}
                 departments={departments}
-                participants={participants.filter(p => p.activityId === activity.id)}
+                participants={participants.filter(p => p.trainingId === training.id)}
+                training_departments={training_departments}
               />
             ))
           )}

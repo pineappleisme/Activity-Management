@@ -1,7 +1,7 @@
 
-  # Activity Management
+  # Training Management
 
-  This is a code bundle for Activity Management. The original project is available at https://www.figma.com/design/IZBQSFnAweA8aFwNdg7Y5j/Activity-Management.
+  This is a code bundle for Training Management. The original project is available at https://www.figma.com/design/IZBQSFnAweA8aFwNdg7Y5j/Activity-Management.
 
   ## Running the code
 

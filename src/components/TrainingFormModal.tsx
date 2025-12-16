@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
-import { Training, Department } from '../App';
+import { Training, Training_departments, Department } from '../App';
 
-interface ActivityFormModalProps {
-  activity: Training | null;
+interface TrainingFormModalProps {
+  training: Training | null;
+  training_departments: Training_departments[];
   departments: Department[];
-  onSubmit: (activity: any) => void;
+  onSubmit: (training: any, departmentIds: string[]) => void;
   onClose: () => void;
 }
 
-export function ActivityFormModal({ activity, departments, onSubmit, onClose }: ActivityFormModalProps) {
+export function TrainingFormModal({ training, training_departments, departments, onSubmit, onClose }: TrainingFormModalProps) {
   const [formData, setFormData] = useState({
     name: '',
     date: new Date().toISOString().split('T')[0],
@@ -19,16 +20,16 @@ export function ActivityFormModal({ activity, departments, onSubmit, onClose }: 
   });
 
   useEffect(() => {
-    if (activity) {
+    if (training) {
       setFormData({
-        name: activity.name,
-        date: activity.date,
-        time: activity.time,
-        departmentIds: activity.departmentIds,
-        description: activity.description,
+        name: training.name,
+        date: training.date,
+        time: training.time,
+        departmentIds: training_departments.filter(td => td.training_id === training.id).map(td => td.departments_id),
+        description: training.description,
       });
     }
-  }, [activity]);
+  }, [training, training_departments]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,11 +37,7 @@ export function ActivityFormModal({ activity, departments, onSubmit, onClose }: 
       alert('Please select at least one department');
       return;
     }
-    if (activity) {
-      onSubmit({ ...activity, ...formData });
-    } else {
-      onSubmit(formData);
-    }
+    onSubmit(formData, formData.departmentIds);
   };
   
   const toggleDepartment = (deptId: string) => {
@@ -57,7 +54,7 @@ export function ActivityFormModal({ activity, departments, onSubmit, onClose }: 
       <div className="bg-white rounded-xl max-w-2xl w-full shadow-2xl max-h-[90vh] overflow-y-auto">
         <div className="bg-gradient-to-r from-orange-600 to-red-600 p-4 sticky top-0">
           <div className="flex items-center justify-between">
-            <h2 className="text-white">{activity ? 'Edit Activity' : 'New Activity'}</h2>
+            <h2 className="text-white">{training ? 'Edit Training' : 'New Training'}</h2>
             <button
               onClick={onClose}
               className="p-1 text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors"
@@ -69,7 +66,7 @@ export function ActivityFormModal({ activity, departments, onSubmit, onClose }: 
 
         <form onSubmit={handleSubmit} className="p-4 space-y-3">
           <div>
-            <label className="block text-gray-700 mb-1 text-sm">Activity Name</label>
+            <label className="block text-gray-700 mb-1 text-sm">Training Name</label>
             <input
               type="text"
               value={formData.name}
@@ -148,7 +145,7 @@ export function ActivityFormModal({ activity, departments, onSubmit, onClose }: 
               type="submit"
               className="flex-1 px-4 py-2 bg-gradient-to-r from-orange-600 to-red-600 text-white rounded-lg hover:from-orange-700 hover:to-red-700 transition-all shadow-md text-sm"
             >
-              {activity ? 'Update' : 'Create'}
+              {training ? 'Update' : 'Create'}
             </button>
           </div>
         </form>

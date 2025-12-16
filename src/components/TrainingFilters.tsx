@@ -1,4 +1,4 @@
-interface ActivityFiltersProps {
+interface TrainingFiltersProps {
   categories: string[];
   filterCategory: string;
   filterStatus: string;
@@ -6,13 +6,13 @@ interface ActivityFiltersProps {
   onStatusChange: (status: string) => void;
 }
 
-export function ActivityFilters({
+export function TrainingFilters({
   categories,
   filterCategory,
   filterStatus,
   onCategoryChange,
   onStatusChange,
-}: ActivityFiltersProps) {
+}: TrainingFiltersProps) {
   return (
     <div className="flex flex-wrap gap-3 items-center">
       <span className="text-gray-600">Filter by:</span>

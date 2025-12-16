@@ -1,40 +1,40 @@
 import { useState, useEffect } from 'react';
-import { Activity } from '../App';
+import { Training } from '../App';
 import { X } from 'lucide-react';
 
-interface ActivityFormProps {
-  activity?: Activity | null;
-  onSubmit: (activity: any) => void;
+interface TrainingFormProps {
+  training?: Training | null;
+  onSubmit: (training: any) => void;
   onClose: () => void;
 }
 
-export function ActivityForm({ activity, onSubmit, onClose }: ActivityFormProps) {
+export function TrainingForm({ training, onSubmit, onClose }: TrainingFormProps) {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     category: 'work',
-    status: 'todo' as Activity['status'],
-    priority: 'medium' as Activity['priority'],
+    status: 'todo' as Training['status'],
+    priority: 'medium' as Training['priority'],
     dueDate: new Date().toISOString().split('T')[0],
   });
 
   useEffect(() => {
-    if (activity) {
+    if (training) {
       setFormData({
-        title: activity.title,
-        description: activity.description,
-        category: activity.category,
-        status: activity.status,
-        priority: activity.priority,
-        dueDate: activity.dueDate,
+        title: training.title,
+        description: training.description,
+        category: training.category,
+        status: training.status,
+        priority: training.priority,
+        dueDate: training.dueDate,
       });
     }
-  }, [activity]);
+  }, [training]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (activity) {
-      onSubmit({ ...activity, ...formData });
+    if (training) {
+      onSubmit({ ...training, ...formData });
     } else {
       onSubmit(formData);
     }
@@ -45,7 +45,7 @@ export function ActivityForm({ activity, onSubmit, onClose }: ActivityFormProps)
       <div className="bg-white rounded-lg max-w-md w-full p-6">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-gray-900">
-            {activity ? 'Edit Activity' : 'New Activity'}
+            {training ? 'Edit Training' : 'New Training'}
           </h2>
           <button
             onClick={onClose}
@@ -110,7 +110,7 @@ export function ActivityForm({ activity, onSubmit, onClose }: ActivityFormProps)
               <select
                 id="priority"
                 value={formData.priority}
-                onChange={(e) => setFormData({ ...formData, priority: e.target.value as Activity['priority'] })}
+                onChange={(e) => setFormData({ ...formData, priority: e.target.value as Training['priority'] })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="low">Low</option>
@@ -128,7 +128,7 @@ export function ActivityForm({ activity, onSubmit, onClose }: ActivityFormProps)
               <select
                 id="status"
                 value={formData.status}
-                onChange={(e) => setFormData({ ...formData, status: e.target.value as Activity['status'] })}
+                onChange={(e) => setFormData({ ...formData, status: e.target.value as Training['status'] })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="todo">To Do</option>
@@ -164,7 +164,7 @@ export function ActivityForm({ activity, onSubmit, onClose }: ActivityFormProps)
               type="submit"
               className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
-              {activity ? 'Update' : 'Create'}
+              {training ? 'Update' : 'Create'}
             </button>
           </div>
         </form>

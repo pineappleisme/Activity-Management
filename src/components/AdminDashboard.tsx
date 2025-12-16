@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { LogOut, Calendar, Users, Building2 } from 'lucide-react';
-import { Training, Employee, Department, Participant } from '../App';
-import { ActivityManagement } from './ActivityManagement';
+import { Training, Training_departments, Employee, Department, Participant } from '../App';
+import { TrainingManagement } from './TrainingManagement';
 import { EmployeeManagement } from './EmployeeManagement';
 import { DepartmentManagement } from './DepartmentManagement';
 
 interface AdminDashboardProps {
-  activities: Training[];
-  setActivities: (activities: Training[]) => void;
+  trainings: Training[];
+  setTrainings: (trainings: Training[]) => void;
+  training_departments: Training_departments[];
+  setTraining_departments: (training_departments: Training_departments[]) => void;
   employees: Employee[];
   setEmployees: (employees: Employee[]) => void;
   departments: Department[];
@@ -17,11 +19,13 @@ interface AdminDashboardProps {
   onLogout: () => void;
 }
 
-type Tab = 'activities' | 'employees' | 'departments';
+type Tab = 'trainings' | 'employees' | 'departments';
 
 export function AdminDashboard({
-  activities,
-  setActivities,
+  trainings,
+  setTrainings,
+  training_departments,
+  setTraining_departments,
   employees,
   setEmployees,
   departments,
@@ -30,10 +34,10 @@ export function AdminDashboard({
   setParticipants,
   onLogout,
 }: AdminDashboardProps) {
-  const [activeTab, setActiveTab] = useState<Tab>('activities');
+  const [activeTab, setActiveTab] = useState<Tab>('trainings');
 
   const tabs = [
-    { id: 'activities' as Tab, label: 'Activities', icon: Calendar, color: 'from-orange-500 to-orange-600' },
+    { id: 'trainings' as Tab, label: 'Trainings', icon: Calendar, color: 'from-orange-500 to-orange-600' },
     { id: 'employees' as Tab, label: 'Employees', icon: Users, color: 'from-amber-500 to-amber-600' },
     { id: 'departments' as Tab, label: 'Departments', icon: Building2, color: 'from-red-500 to-red-600' },
   ];
@@ -46,7 +50,7 @@ export function AdminDashboard({
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-gray-900 mb-1">Admin Dashboard</h1>
-              <p className="text-gray-600 text-sm">Manage training activities, employees, and departments</p>
+              <p className="text-gray-600 text-sm">Manage trainings, employees, and departments</p>
             </div>
             <button
               onClick={onLogout}
@@ -83,10 +87,12 @@ export function AdminDashboard({
         </div>
 
         {/* Tab Content */}
-        {activeTab === 'activities' && (
-          <ActivityManagement
-            activities={activities}
-            setActivities={setActivities}
+        {activeTab === 'trainings' && (
+          <TrainingManagement
+            trainings={trainings}
+            setTrainings={setTrainings}
+            training_departments={training_departments}
+            setTraining_departments={setTraining_departments}
             employees={employees}
             departments={departments}
             participants={participants}
