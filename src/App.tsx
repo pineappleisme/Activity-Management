@@ -15,7 +15,7 @@ export interface Employee {
   email: string;
   departmentId: string;
   position: string;
-  isAdmin: boolean;
+  is_admin: boolean;
   password: string;
 }
 
@@ -52,12 +52,12 @@ export default function App() {
   ]);
 
   const [employees, setEmployees] = useState<Employee[]>([
-    { id: '1', name: 'admin', email: 'john@example.com', departmentId: '1', position: 'Senior Developer' , isAdmin: true, password: '123' },
-    { id: '2', name: 'Jannessa', email: 'sarah@example.com', departmentId: '1', position: 'Product Manager' , isAdmin: false, password: '' },
-    { id: '3', name: 'Chen', email: 'mike@example.com', departmentId: '2', position: 'Marketing Lead' , isAdmin: false, password: '' },
-    { id: '4', name: 'Emily Davis', email: 'emily@example.com', departmentId: '3', position: 'Sales Representative' , isAdmin: false, password: '' },
-    { id: '5', name: 'Alex Kumar', email: 'alex@example.com', departmentId: '4', position: 'HR Manager' , isAdmin: false, password: '' },
-    { id: '6', name: 'Lisa', email: 'lisa@example.com', departmentId: '1', position: 'Frontend Developer' , isAdmin: false, password: '345' },
+    { id: '1', name: 'admin', email: 'john@example.com', departmentId: '1', position: 'Senior Developer' , is_admin: true, password: '123' },
+    { id: '2', name: 'Jannessa', email: 'sarah@example.com', departmentId: '1', position: 'Product Manager' , is_admin: false, password: '' },
+    { id: '3', name: 'Chen', email: 'mike@example.com', departmentId: '2', position: 'Marketing Lead' , is_admin: false, password: '' },
+    { id: '4', name: 'Emily Davis', email: 'emily@example.com', departmentId: '3', position: 'Sales Representative' , is_admin: false, password: '' },
+    { id: '5', name: 'Alex Kumar', email: 'alex@example.com', departmentId: '4', position: 'HR Manager' , is_admin: false, password: '' },
+    { id: '6', name: 'Lisa', email: 'lisa@example.com', departmentId: '1', position: 'Frontend Developer' , is_admin: false, password: '345' },
   ]);
 
   const [trainings, setTrainings] = useState<Training[]>([
@@ -105,7 +105,7 @@ export default function App() {
     const user = employees.find(e => e.name === username);
 
     if (!user) return false;
-    if (!user.isAdmin) return false;
+    if (!user.is_admin) return false;
     if (user.password !== password) return false;
 
     setIsAdmin(true);

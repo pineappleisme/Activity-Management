@@ -21,24 +21,45 @@ export function TrainingFormModal({ training, training_departments, departments,
 
   useEffect(() => {
     if (training) {
+      const deptIds = training_departments
+      .filter(td => td.training_id === training.id)
+      .map(td => td.departments_id);
+
       setFormData({
         name: training.name,
         date: training.date,
         time: training.time,
-        departmentIds: training_departments.filter(td => td.training_id === training.id).map(td => td.departments_id),
+        departmentIds: deptIds,
         description: training.description,
       });
     }
   }, [training, training_departments]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (formData.departmentIds.length === 0) {
-      alert('Please select at least one department');
-      return;
+  const handleSubmit = () => {
+    if (training) {
+      onSubmit(
+        {
+          ...training,
+          name: formData.name,
+          date: formData.date,
+          time: formData.time,
+          description: formData.description,
+        },
+        formData.departmentIds
+      );
+    } else {
+      onSubmit(
+        {
+          name: formData.name,
+          date: formData.date,
+          time: formData.time,
+          description: formData.description,
+        } as any,
+        formData.departmentIds
+      );
     }
-    onSubmit(formData, formData.departmentIds);
   };
+
   
   const toggleDepartment = (deptId: string) => {
     setFormData(prev => ({
