@@ -29,6 +29,7 @@ export function TrainingManagement({
   const [expandedTraining, setExpandedTraining] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterMode, setFilterMode] = useState<'all' | 'pending' | 'notAttended'>('all');
+  //const [nonRemovableDepartmentIds, setNonRemovableDepartmentIds] =useState<string[]>();
 
   const filteredTrainings = useMemo(() => {
     return trainings.filter(training =>
@@ -85,42 +86,43 @@ export function TrainingManagement({
 */
 
   const handleUpdate = (training: Training, departmentIds: string[]) => {
-    // 1️⃣ 更新 training 基本信息
+    //更新training 基本信息
     setTrainings(trainings.map(t => (t.id === training.id ? training : t)));
 
-    // 2️⃣ 原有 departmentIds
+    //原有department id
     const oldDeptIds = training_departments
       .filter(td => td.training_id === training.id)
       .map(td => td.departments_id);
 
-    // 3️⃣ 新增 / 移除的 department
+    //新增/移除的 department
     const addedDeptIds = departmentIds.filter(id => !oldDeptIds.includes(id));
     const removedDeptIds = oldDeptIds.filter(id => !departmentIds.includes(id));
 
-    // 4️⃣ 判断哪些 department 可以被安全移除
+    //判断哪些 department 可以被安全移除
     const removableDeptIds = removedDeptIds.filter(deptId => {
       const deptEmployeeIds = employees
         .filter(e => e.departmentId === deptId)
         .map(e => e.id);
-
+      //获得该 department 的所有参与者
       const deptParticipants = participants.filter(
         p =>
           p.trainingId === training.id &&
           deptEmployeeIds.includes(p.employeeId)
       );
 
-      // 规则：全部 pending & not attended 才能删除
+      //全部 pending & not attended 才能删除
       return deptParticipants.every(
         p => !p.attended && !p.acknowledgment
       );
     });
 
-    // 5️⃣ 更新 training_departments
+    // 移除training_departments
     const remainingTrainingDepartments = training_departments.filter(td => {
       if (td.training_id !== training.id) return true;
       return !removableDeptIds.includes(td.departments_id);
     });
 
+    // 新增training_departments
     const newTrainingDepartments = addedDeptIds.map(deptId => ({
       training_id: training.id,
       departments_id: deptId,
@@ -131,7 +133,7 @@ export function TrainingManagement({
       ...newTrainingDepartments,
     ]);
 
-    // 6️⃣ 新增 department → 自动加 participants
+    //加入新participants
     const addedParticipants: Participant[] = employees
       .filter(e => addedDeptIds.includes(e.departmentId))
       .map(e => ({
@@ -141,7 +143,7 @@ export function TrainingManagement({
         acknowledgment: false,
       }));
 
-    // 7️⃣ 移除 department → 删除对应 participants（只限 removable）
+    //移除旧participants
     const remainingParticipants = participants.filter(p => {
       if (p.trainingId !== training.id) return true;
 
@@ -156,9 +158,30 @@ export function TrainingManagement({
       ...addedParticipants,
     ]);
 
-    // 8️⃣ 收尾
     setEditingTraining(null);
     setIsFormOpen(false);
+  };
+
+  //获取不可移除的 department id
+  const getNonRemovableDepartmentIds = (trainingId: string): string[] => {
+    return training_departments
+      .filter(td => td.training_id === trainingId)
+      .map(td => td.departments_id)
+      .filter(deptId => {
+        const deptEmployeeIds = employees
+          .filter(e => e.departmentId === deptId)
+          .map(e => e.id);
+
+        const deptParticipants = participants.filter(
+          p =>
+            p.trainingId === trainingId &&
+            deptEmployeeIds.includes(p.employeeId)
+        );
+
+        return deptParticipants.some(
+          p => p.attended || p.acknowledgment
+        );
+      });
   };
 
 
@@ -174,6 +197,7 @@ export function TrainingManagement({
     setIsFormOpen(true);
   };
 
+  //更新参与者状态
   const updateParticipantStatus = (
     activityId: string,
     employeeId: string,
@@ -413,6 +437,11 @@ export function TrainingManagement({
           training={editingTraining}
           training_departments={training_departments}
           departments={departments}
+          nonRemovableDepartmentIds={
+            editingTraining
+              ? getNonRemovableDepartmentIds(editingTraining.id)
+              : []
+          }
           onSubmit={editingTraining ? handleUpdate : handleCreate}
           onClose={() => {
             setIsFormOpen(false);

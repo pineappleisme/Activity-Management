@@ -52,7 +52,7 @@ export default function App() {
   ]);
 
   const [employees, setEmployees] = useState<Employee[]>([
-    { id: '1', name: 'admin', email: 'john@example.com', departmentId: '1', position: 'Senior Developer' , is_admin: true, password: '123' },
+    { id: '1', name: '1', email: 'john@example.com', departmentId: '1', position: 'Senior Developer' , is_admin: true, password: '1' },
     { id: '2', name: 'Jannessa', email: 'sarah@example.com', departmentId: '1', position: 'Product Manager' , is_admin: false, password: '' },
     { id: '3', name: 'Chen', email: 'mike@example.com', departmentId: '2', position: 'Marketing Lead' , is_admin: false, password: '' },
     { id: '4', name: 'Emily Davis', email: 'emily@example.com', departmentId: '3', position: 'Sales Representative' , is_admin: false, password: '' },

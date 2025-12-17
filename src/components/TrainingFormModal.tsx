@@ -6,15 +6,18 @@ interface TrainingFormModalProps {
   training: Training | null;
   training_departments: Training_departments[];
   departments: Department[];
+  nonRemovableDepartmentIds: string[];
   onSubmit: (training: any, departmentIds: string[]) => void;
   onClose: () => void;
 }
 
-export function TrainingFormModal({ training, training_departments, departments, onSubmit, onClose }: TrainingFormModalProps) {
+export function TrainingFormModal({ training, training_departments, departments,nonRemovableDepartmentIds, onSubmit, onClose }: TrainingFormModalProps) {
+  //console.log('START', { training, training_departments, departments, nonRemovableDepartmentIds });
+  //数据初始化
   const [formData, setFormData] = useState({
     name: '',
     date: new Date().toISOString().split('T')[0],
-    time: '09:00',
+    time: '00:00',
     departmentIds: [] as string[],
     description: '',
   });
@@ -32,10 +35,26 @@ export function TrainingFormModal({ training, training_departments, departments,
         departmentIds: deptIds,
         description: training.description,
       });
+    }else{
+      setFormData({
+        name: '',
+        date: new Date().toISOString().split('T')[0],
+        time: '00:00',
+        departmentIds: [],
+        description: '',
+      });
     }
   }, [training, training_departments]);
 
+  //for safe
+  const safeNonRemovableDepartmentIds = Array.isArray(nonRemovableDepartmentIds)
+    ? nonRemovableDepartmentIds
+    : [];
+
+
+  //表单提交
   const handleSubmit = (e: React.FormEvent) => {
+    console.log('submit');
     e.preventDefault();
 
     if (formData.departmentIds.length === 0) {
@@ -67,15 +86,16 @@ export function TrainingFormModal({ training, training_departments, departments,
     }
   };
 
-
-  
+  //
   const toggleDepartment = (deptId: string) => {
+    console.log('toggle', deptId);
     setFormData(prev => ({
       ...prev,
       departmentIds: prev.departmentIds.includes(deptId)
         ? prev.departmentIds.filter(id => id !== deptId)
         : [...prev.departmentIds, deptId]
     }));
+    console.log('formData.departmentIds', formData.departmentIds);
   };
 
   return (
@@ -136,6 +156,18 @@ export function TrainingFormModal({ training, training_departments, departments,
                 <button
                   key={dept.id}
                   type="button"
+                  /**/
+                    disabled={
+                      !!training &&
+                      formData.departmentIds.includes(dept.id) &&
+                      safeNonRemovableDepartmentIds.includes(dept.id)
+                    }
+                    title={
+                      training && safeNonRemovableDepartmentIds.includes(dept.id)
+                        ? 'This department has participants who already attended or acknowledged'
+                        : ''
+                    }
+                        
                   onClick={() => toggleDepartment(dept.id)}
                   className={`px-3 py-2 rounded-lg text-sm transition-colors ${
                     formData.departmentIds.includes(dept.id)
