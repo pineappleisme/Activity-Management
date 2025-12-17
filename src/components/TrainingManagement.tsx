@@ -35,7 +35,12 @@ export function TrainingManagement({
     return trainings.filter(training =>
       training.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       training.description.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    )
+    .sort((a, b) => {
+      const dateA = new Date(`${a.date} ${a.time}`).getTime();
+      const dateB = new Date(`${b.date} ${b.time}`).getTime();
+      return dateB - dateA;
+    });
   }, [trainings, searchQuery]);
 
   const handleCreate = (training: Omit<Training, 'id'>, departmentIds: string[]) => {
