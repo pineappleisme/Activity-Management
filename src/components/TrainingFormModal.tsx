@@ -54,7 +54,7 @@ export function TrainingFormModal({ training, training_departments, departments,
 
   //表单提交
   const handleSubmit = (e: React.FormEvent) => {
-    console.log('submit');
+    //console.log('submit');
     e.preventDefault();
 
     if (formData.departmentIds.length === 0) {
@@ -88,7 +88,7 @@ export function TrainingFormModal({ training, training_departments, departments,
 
   //
   const toggleDepartment = (deptId: string) => {
-    console.log('toggle', deptId);
+    //console.log('toggle', deptId);
     setFormData(prev => ({
       ...prev,
       departmentIds: prev.departmentIds.includes(deptId)
@@ -169,11 +169,16 @@ export function TrainingFormModal({ training, training_departments, departments,
                     }
                         
                   onClick={() => toggleDepartment(dept.id)}
-                  className={`px-3 py-2 rounded-lg text-sm transition-colors ${
-                    formData.departmentIds.includes(dept.id)
-                      ? 'bg-orange-500 text-white hover:bg-orange-600'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}
+                  className={`
+                    px-3 py-2 rounded-lg text-sm transition-colors
+                    ${
+                      formData.departmentIds.includes(dept.id)
+                        ? safeNonRemovableDepartmentIds.includes(dept.id)
+                          ? 'bg-gray-300 text-gray-400 cursor-not-allowed'
+                          : 'bg-orange-500 text-white hover:bg-orange-600'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }
+                  `}
                 >
                   {dept.name}
                 </button>
