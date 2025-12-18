@@ -57,7 +57,7 @@ export default function App() {
     { id: '3', name: 'Chen', email: 'mike@example.com', departmentId: '2', position: 'Marketing Lead' , is_admin: false, password: '' },
     { id: '4', name: 'Emily Davis', email: 'emily@example.com', departmentId: '3', position: 'Sales Representative' , is_admin: false, password: '' },
     { id: '5', name: 'Alex Kumar', email: 'alex@example.com', departmentId: '4', position: 'HR Manager' , is_admin: false, password: '' },
-    { id: '6', name: 'Lisa', email: 'lisa@example.com', departmentId: '1', position: 'Frontend Developer' , is_admin: false, password: '345' },
+    { id: '6', name: 'Lisa', email: 'lisa@example.com', departmentId: '1', position: 'SW Developer' , is_admin: false, password: '345' },
   ]);
 
   const [trainings, setTrainings] = useState<Training[]>([
