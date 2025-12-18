@@ -161,7 +161,7 @@ export function PublicView({
         {/* Filters */}
         <div className="bg-white rounded-xl shadow-md p-4 mb-6">
           <div className="flex flex-col lg:flex-row gap-3">
-            {/* View Mode Switch - 永远显示 */}
+            {/* View Mode Switch */}
             <div className="flex gap-2">
               <button
                 onClick={() => setViewMode('training')}
@@ -186,7 +186,7 @@ export function PublicView({
               </button>
             </div>
 
-            {/* 👇 只有 training 才显示 */}
+            {/* 只有 training 才显示 */}
             {viewMode === 'training' && (
               <>
                 {/* Search Bar */}
@@ -224,6 +224,22 @@ export function PublicView({
                 </div>
               </>
             )}
+
+            {/* 只有 employee 才显示 */}
+            {viewMode === 'employee' && (
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <input
+                  type="text"
+                  placeholder="Search by employee name..."
+                  value={employeeQuery}
+                  onChange={(e) => setEmployeeQuery(e.target.value)}
+                  className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 text-sm"
+                />
+              </div>
+            )}
+
+
           </div>
         </div>
 
@@ -256,17 +272,6 @@ export function PublicView({
 
           {viewMode === 'employee' && (
             <>
-              <div className="bg-white rounded-xl shadow-md p-4">
-                <input
-                  type="text"
-                  placeholder="Search by employee name..."
-                  value={employeeQuery}
-                  onChange={(e) => setEmployeeQuery(e.target.value)}
-                  className="w-full px-3 py-2 border rounded-lg"
-                />
-                
-              </div>
-
               {selectedEmployee && (
                 <EmployeeTrainingView
                   employee={selectedEmployee}
