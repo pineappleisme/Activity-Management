@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Search, LogIn, Calendar, Users, ArrowUpDown } from 'lucide-react';
 import { Training, Training_departments, Employee, Department, Participant } from '../App';
 import { TrainingCard } from './TrainingCard';
@@ -31,6 +31,7 @@ export function PublicView({
   const [employeeQuery, setEmployeeQuery] = useState('');
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
 
+  //by name相关
   const employeeTrainings = useMemo(() => {
     if (!selectedEmployee) return [];
 
@@ -63,6 +64,17 @@ export function PublicView({
       e.name.toLowerCase().includes(employeeQuery.toLowerCase())
     );
   }, [employeeQuery, employees]);
+
+  useEffect(() => {
+    if (employeeQuery.trim() === '') {
+      setSelectedEmployee(null);
+      return;
+    }
+
+    if (filteredEmployees.length === 1) {
+      setSelectedEmployee(filteredEmployees[0]);
+    }
+  }, [employeeQuery, filteredEmployees]);
 
 
   const filteredTrainings = useMemo(() => {
@@ -149,6 +161,7 @@ export function PublicView({
         {/* Filters */}
         <div className="bg-white rounded-xl shadow-md p-4 mb-6">
           <div className="flex flex-col lg:flex-row gap-3">
+            {/* View Mode Switch - 永远显示 */}
             <div className="flex gap-2">
               <button
                 onClick={() => setViewMode('training')}
@@ -160,6 +173,7 @@ export function PublicView({
               >
                 By training
               </button>
+
               <button
                 onClick={() => setViewMode('employee')}
                 className={`px-3 py-2 rounded-lg text-sm ${
@@ -172,38 +186,44 @@ export function PublicView({
               </button>
             </div>
 
-            {/* Search Bar */}
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <input
-                type="text"
-                placeholder="Search by training name, department, or participant..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
-              />
-            </div>
+            {/* 👇 只有 training 才显示 */}
+            {viewMode === 'training' && (
+              <>
+                {/* Search Bar */}
+                <div className="flex-1 relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <input
+                    type="text"
+                    placeholder="Search by training name, department, or participant..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 text-sm"
+                  />
+                </div>
 
-            {/* Date Filter & Sort */}
-            <div className="flex gap-3">
-              <input
-                type="date"
-                value={dateFilter}
-                onChange={(e) => setDateFilter(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
-              />
+                {/* Date & Sort */}
+                <div className="flex gap-3">
+                  <input
+                    type="date"
+                    value={dateFilter}
+                    onChange={(e) => setDateFilter(e.target.value)}
+                    className="px-3 py-2 border rounded-lg text-sm"
+                  />
 
-              <button
-                onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                className="flex items-center gap-2 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm"
-                title={`Sort ${sortOrder === 'asc' ? 'Descending' : 'Ascending'}`}
-              >
-                <ArrowUpDown className="w-4 h-4" />
-                <span className="hidden sm:inline">
-                  {sortOrder === 'asc' ? 'Oldest First' : 'Newest First'}
-                </span>
-              </button>
-            </div>
+                  <button
+                    onClick={() =>
+                      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
+                    }
+                    className="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-lg text-sm"
+                  >
+                    <ArrowUpDown className="w-4 h-4" />
+                    <span className="hidden sm:inline">
+                      {sortOrder === 'asc' ? 'Oldest First' : 'Newest First'}
+                    </span>
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
 
@@ -244,21 +264,7 @@ export function PublicView({
                   onChange={(e) => setEmployeeQuery(e.target.value)}
                   className="w-full px-3 py-2 border rounded-lg"
                 />
-                <div className="mt-2 space-y-1">
-                  {filteredEmployees.map(e => (
-                    <button
-                      key={e.id}
-                      onClick={() => setSelectedEmployee(e)}
-                      className={`block w-full text-left px-3 py-2 rounded ${
-                        selectedEmployee?.id === e.id
-                          ? 'bg-orange-100'
-                          : 'hover:bg-gray-100'
-                      }`}
-                    >
-                      {e.name}
-                    </button>
-                  ))}
-                </div>
+                
               </div>
 
               {selectedEmployee && (
