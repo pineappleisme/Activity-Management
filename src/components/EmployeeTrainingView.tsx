@@ -11,6 +11,13 @@ export function EmployeeTrainingView({ employee, trainings }: EmployeeTrainingPr
     return(
         <div className="space-y-6">
             <div className="space-y-4">
+                {/*participant*/ }
+                <div className="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition-shadow">
+                    <h3 className="text-gray-900 mb-1">{employee.name}</h3>
+                    <h3 className="px-2 py-1 rounded-full text-xs
+                    border border-gray-400 text-gray-700 bg-white">{employee.email}</h3>
+                </div>
+                
                 {/* Trainings */}
                 {trainings.length === 0 ? (
                     <div className="bg-white rounded-xl shadow-md p-8 text-center">
@@ -63,12 +70,17 @@ export function EmployeeTrainingView({ employee, trainings }: EmployeeTrainingPr
                             </span>
 
                             <span
-                                className={`px-2 py-1 rounded-full text-xs ${
+                                className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs ${
                                 training.acknowledgment
                                     ? 'bg-green-100 text-green-700'
                                     : 'bg-gray-100 text-gray-700'
                                 }`}
                             >
+                                {training.acknowledgment ? (
+                                <CheckCircle className="w-3 h-3" />
+                                ) : (
+                                <XCircle className="w-3 h-3" />
+                                )}
                                 {training.acknowledgment ? 'Acknowledged' : 'Pending'}
                             </span>
                             </div>

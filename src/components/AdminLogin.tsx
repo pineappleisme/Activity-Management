@@ -86,7 +86,7 @@ export function AdminLogin({ onLogin, onClose }: AdminLoginProps) {
           </div>
 
           <p className="text-center text-gray-500 text-xs mt-3">
-            Demo credentials: admin / admin
+            Demo credentials: 1 / 1
           </p>
         </form>
       </div>
