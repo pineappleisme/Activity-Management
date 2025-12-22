@@ -29,7 +29,7 @@ export function DepartmentFormModal({ department, employees, onSubmit, onClose }
       });
       // Set employees that belong to this department
       const deptEmployees = employees
-        .filter(emp => emp.departmentId === department.id)
+        .filter(emp => emp.department_id === department.id)
         .map(emp => emp.id);
       setSelectedEmployeeIds(deptEmployees);
     }
@@ -90,7 +90,7 @@ export function DepartmentFormModal({ department, employees, onSubmit, onClose }
             <div className="border border-gray-300 rounded-lg p-2 max-h-64 overflow-y-auto space-y-1">
               {employees.map(employee => {
                 const isSelected = selectedEmployeeIds.includes(employee.id);
-                const currentDept = employees.find(e => e.id === employee.id)?.departmentId;
+                const currentDept = employees.find(e => e.id === employee.id)?.department_id;
                 const isDifferentDept = department && currentDept !== department.id;
                 
                 return (

@@ -139,12 +139,12 @@ export function TrainingCard({ training, employees, departments, participants, t
                   return true;
                 })
                 .map(participant => {
-                  const employee = employees.find(e => e.id === participant.employeeId);
+                  const employee = employees.find(e => e.id === participant.employee_id);
                   if (!employee) return null;
 
                   return (
                     <div
-                      key={participant.employeeId}
+                      key={participant.employee_id}
                       className="flex items-center justify-between p-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                     >
                       <div className="flex items-center gap-2">

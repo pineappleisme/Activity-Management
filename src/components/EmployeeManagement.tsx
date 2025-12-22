@@ -16,7 +16,7 @@ export function EmployeeManagement({ employees, setEmployees, departments }: Emp
 
   const filteredEmployees = useMemo(() => {
     if (filterDepartment === 'all') return employees;
-    return employees.filter(emp => emp.departmentId === filterDepartment);
+    return employees.filter(emp => emp.department_id === filterDepartment);
   }, [employees, filterDepartment]);
 
   const handleCreate = (employee: Omit<Employee, 'id'>) => {
@@ -79,7 +79,7 @@ export function EmployeeManagement({ employees, setEmployees, departments }: Emp
       {/* Employees Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {filteredEmployees.map(employee => {
-          const employeeDepartment = departments.find(d => d.id === employee.departmentId);
+          const employeeDepartment = departments.find(d => d.id === employee.department_id);
 
           return (
             <div

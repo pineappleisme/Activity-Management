@@ -13,7 +13,7 @@ export function EmployeeFormModal({ employee, departments, onSubmit, onClose }: 
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    departmentId: '',
+    department_id: '',
     position: '',
   });
 
@@ -22,7 +22,7 @@ export function EmployeeFormModal({ employee, departments, onSubmit, onClose }: 
       setFormData({
         name: employee.name,
         email: employee.email,
-        departmentId: employee.departmentId,
+        department_id: employee.department_id,
         position: employee.position,
       });
     }
@@ -30,7 +30,7 @@ export function EmployeeFormModal({ employee, departments, onSubmit, onClose }: 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.departmentId) {
+    if (!formData.department_id) {
       alert('Please select a department');
       return;
     }
@@ -93,8 +93,8 @@ export function EmployeeFormModal({ employee, departments, onSubmit, onClose }: 
           <div>
             <label className="block text-gray-700 mb-1 text-sm">Department</label>
             <select
-              value={formData.departmentId}
-              onChange={(e) => setFormData({ ...formData, departmentId: e.target.value })}
+              value={formData.department_id}
+              onChange={(e) => setFormData({ ...formData, department_id: e.target.value })}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm"
               required
             >

@@ -60,10 +60,10 @@ export function TrainingManagement({
     // Auto-add participants from selected departments
     const newParticipants: Participant[] = [];
     employees.forEach(employee => {
-      if (departmentIds.includes(employee.departmentId)) {
+      if (departmentIds.includes(employee.department_id)) {
         newParticipants.push({
-          trainingId: newTraining.id,
-          employeeId: employee.id,
+          training_id: newTraining.id,
+          employee_id: employee.id,
           attended: false,
           acknowledgment: false,
         });
@@ -106,13 +106,13 @@ export function TrainingManagement({
     //判断哪些 department 可以被安全移除
     const removableDeptIds = removedDeptIds.filter(deptId => {
       const deptEmployeeIds = employees
-        .filter(e => e.departmentId === deptId)
+        .filter(e => e.department_id === deptId)
         .map(e => e.id);
       //获得该 department 的所有参与者
       const deptParticipants = participants.filter(
         p =>
-          p.trainingId === training.id &&
-          deptEmployeeIds.includes(p.employeeId)
+          p.training_id === training.id &&
+          deptEmployeeIds.includes(p.employee_id)
       );
 
       //全部 pending & not attended 才能删除
@@ -140,22 +140,22 @@ export function TrainingManagement({
 
     //加入新participants
     const addedParticipants: Participant[] = employees
-      .filter(e => addedDeptIds.includes(e.departmentId))
+      .filter(e => addedDeptIds.includes(e.department_id))
       .map(e => ({
-        trainingId: training.id,
-        employeeId: e.id,
+        training_id: training.id,
+        employee_id: e.id,
         attended: false,
         acknowledgment: false,
       }));
 
     //移除旧participants
     const remainingParticipants = participants.filter(p => {
-      if (p.trainingId !== training.id) return true;
+      if (p.training_id !== training.id) return true;
 
-      const emp = employees.find(e => e.id === p.employeeId);
+      const emp = employees.find(e => e.id === p.employee_id);
       if (!emp) return true;
 
-      return !removableDeptIds.includes(emp.departmentId);
+      return !removableDeptIds.includes(emp.department_id);
     });
 
     setParticipants([
@@ -168,19 +168,19 @@ export function TrainingManagement({
   };
 
   //获取不可移除的 department id
-  const getNonRemovableDepartmentIds = (trainingId: string): string[] => {
+  const getNonRemovableDepartmentIds = (training_id: string): string[] => {
     return training_departments
-      .filter(td => td.training_id === trainingId)
+      .filter(td => td.training_id === training_id)
       .map(td => td.departments_id)
       .filter(deptId => {
         const deptEmployeeIds = employees
-          .filter(e => e.departmentId === deptId)
+          .filter(e => e.department_id === deptId)
           .map(e => e.id);
 
         const deptParticipants = participants.filter(
           p =>
-            p.trainingId === trainingId &&
-            deptEmployeeIds.includes(p.employeeId)
+            p.training_id === training_id &&
+            deptEmployeeIds.includes(p.employee_id)
         );
 
         return deptParticipants.some(
@@ -193,7 +193,7 @@ export function TrainingManagement({
   const handleDelete = (id: string) => {
     if (confirm('Are you sure you want to delete this training?')) {
       setTrainings(trainings.filter(t => t.id !== id));
-      setParticipants(participants.filter(p => p.trainingId !== id));
+      setParticipants(participants.filter(p => p.training_id !== id));
     }
   };
 
@@ -204,21 +204,21 @@ export function TrainingManagement({
 
   //更新参与者状态
   const updateParticipantStatus = (
-    activityId: string,
-    employeeId: string,
+    training_id: string,
+    employee_id: string,
     field: 'attended' | 'acknowledgment'
   ) => {
     setParticipants(
       participants.map(p =>
-        p.trainingId === activityId && p.employeeId === employeeId
+        p.training_id === training_id && p.employee_id === employee_id
           ? { ...p, [field]: !p[field] }
           : p
       )
     );
   };
 
-  const getActivityStats = (activityId: string) => {
-    const activityParticipants = participants.filter(p => p.trainingId === activityId);
+  const getActivityStats = (training_id: string) => {
+    const activityParticipants = participants.filter(p => p.training_id === training_id);
     const acknowledged = activityParticipants.filter(p => p.acknowledgment).length;
     const attended = activityParticipants.filter(p => p.attended).length;
     return { total: activityParticipants.length, acknowledged, attended };
@@ -256,7 +256,7 @@ export function TrainingManagement({
         {filteredTrainings.map(training => {
           const stats = getActivityStats(training.id);
           const trainingDepartments = departments.filter(d => training_departments.some(td => td.training_id === training.id && td.departments_id === d.id));
-          const trainingParticipants = participants.filter(p => p.trainingId === training.id);
+          const trainingParticipants = participants.filter(p => p.training_id === training.id);
           const isExpanded = expandedTraining === training.id;
 
           return (
@@ -371,12 +371,12 @@ export function TrainingManagement({
                         return true;
                       })
                       .map(participant => {
-                        const employee = employees.find(e => e.id === participant.employeeId);
+                        const employee = employees.find(e => e.id === participant.employee_id);
                         if (!employee) return null;
 
                         return (
                           <div
-                            key={participant.employeeId}
+                            key={participant.employee_id}
                             className="flex items-center justify-between p-2 bg-gray-50 rounded-lg"
                           >
                             <div className="flex-1 min-w-0">

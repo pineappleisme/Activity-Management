@@ -39,8 +39,8 @@ export function PublicView({
       .map(training => {
         const participant = participants.find(
           p =>
-            p.trainingId === training.id &&
-            p.employeeId === selectedEmployee.id
+            p.training_id === training.id &&
+            p.employee_id === selectedEmployee.id
         );
 
         if (!participant) return null;
@@ -87,9 +87,9 @@ export function PublicView({
           return depts.some(dept => dept.name.toLowerCase().includes(searchQuery.toLowerCase()));
         })() ||
         participants
-          .filter(p => p.trainingId === training.id)
+          .filter(p => p.training_id === training.id)
           .some(p => {
-            const employee = employees.find(e => e.id === p.employeeId);
+            const employee = employees.find(e => e.id === p.employee_id);
             return employee?.name.toLowerCase().includes(searchQuery.toLowerCase());
           });
 
@@ -262,7 +262,7 @@ export function PublicView({
                     training={training}
                     employees={employees}
                     departments={departments}
-                    participants={participants.filter(p => p.trainingId === training.id)}
+                    participants={participants.filter(p => p.training_id === training.id)}
                     training_departments={training_departments}
                   />
                 ))

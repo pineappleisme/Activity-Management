@@ -25,28 +25,24 @@ export function DepartmentManagement({ departments, setDepartments, employees, s
     setEmployees(
       employees.map(emp =>
         selectedEmployeeIds.includes(emp.id)
-          ? { ...emp, departmentId: newDepartment.id }
+          ? { ...emp, department_id: newDepartment.id }
           : emp
       )
     );
     
     setIsFormOpen(false);
   };
-
+    
+    // 可以添加员工，无法删除
   const handleUpdate = (department: Department, selectedEmployeeIds: string[]) => {
     setDepartments(departments.map(d => (d.id === department.id ? department : d)));
-    
-    // Update employees: 
-    // - Set selected employees to this department
-    // - Remove unselected employees from this department (they become unassigned or stay in their current dept)
+
     setEmployees(
       employees.map(emp => {
         if (selectedEmployeeIds.includes(emp.id)) {
-          // Employee is selected, should belong to this department
-          return { ...emp, departmentId: department.id };
-        } else if (emp.departmentId === department.id) {
-          // Employee was in this department but is no longer selected
-          // Keep them in the department (don't remove unless explicitly reassigned)
+          // 将选中的员工加入这个部门
+          return { ...emp, department_id: department.id };
+        } else if (emp.department_id === department.id) {
           return emp;
         }
         return emp;
@@ -58,7 +54,7 @@ export function DepartmentManagement({ departments, setDepartments, employees, s
   };
 
   const handleDelete = (id: string) => {
-    const employeeCount = employees.filter(e => e.departmentId === id).length;
+    const employeeCount = employees.filter(e => e.department_id === id).length;
     if (employeeCount > 0) {
       alert(`Cannot delete department. ${employeeCount} employee(s) are still assigned to it.`);
       return;
@@ -74,7 +70,7 @@ export function DepartmentManagement({ departments, setDepartments, employees, s
   };
 
   const getEmployeeCount = (deptId: string) => {
-    return employees.filter(e => e.departmentId === deptId).length;
+    return employees.filter(e => e.department_id === deptId).length;
   };
 
   return (

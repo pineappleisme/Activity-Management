@@ -13,7 +13,7 @@ export interface Employee {
   id: string;
   name: string;
   email: string;
-  departmentId: string;
+  department_id: string;
   position: string;
   is_admin: boolean;
   password: string;
@@ -33,8 +33,8 @@ export interface Training_departments {
 }
 
 export interface Participant {
-  trainingId: string;
-  employeeId: string;
+  training_id: string;
+  employee_id: string;
   attended: boolean;
   acknowledgment: boolean;
 }
@@ -52,12 +52,12 @@ export default function App() {
   ]);
 
   const [employees, setEmployees] = useState<Employee[]>([
-    { id: '1', name: '1', email: 'john@example.com', departmentId: '1', position: 'Senior Developer' , is_admin: true, password: '1' },
-    { id: '2', name: 'Jannessa', email: 'sarah@example.com', departmentId: '1', position: 'Product Manager' , is_admin: false, password: '' },
-    { id: '3', name: 'Chen', email: 'mike@example.com', departmentId: '2', position: 'Marketing Lead' , is_admin: false, password: '' },
-    { id: '4', name: 'Emily Davis', email: 'emily@example.com', departmentId: '3', position: 'Sales Representative' , is_admin: false, password: '' },
-    { id: '5', name: 'Alex Kumar', email: 'alex@example.com', departmentId: '4', position: 'HR Manager' , is_admin: false, password: '' },
-    { id: '6', name: 'Lisa', email: 'lisa@example.com', departmentId: '1', position: 'SW Developer' , is_admin: false, password: '345' },
+    { id: '1', name: '1', email: 'john@example.com', department_id: '1', position: 'Senior Developer' , is_admin: true, password: '1' },
+    { id: '2', name: 'Jannessa', email: 'sarah@example.com', department_id: '1', position: 'Product Manager' , is_admin: false, password: '' },
+    { id: '3', name: 'Chen', email: 'mike@example.com', department_id: '2', position: 'Marketing Lead' , is_admin: false, password: '' },
+    { id: '4', name: 'Emily Davis', email: 'emily@example.com', department_id: '3', position: 'Sales Representative' , is_admin: false, password: '' },
+    { id: '5', name: 'Alex Kumar', email: 'alex@example.com', department_id: '4', position: 'HR Manager' , is_admin: false, password: '' },
+    { id: '6', name: 'Lisa', email: 'lisa@example.com', department_id: '1', position: 'SW Developer' , is_admin: false, password: '345' },
   ]);
 
   const [trainings, setTrainings] = useState<Training[]>([
@@ -91,14 +91,14 @@ export default function App() {
   ]);
 
   const [participants, setParticipants] = useState<Participant[]>([
-    { trainingId: '1', employeeId: '1', attended: true, acknowledgment: true },
-    { trainingId: '1', employeeId: '2', attended: false, acknowledgment: true },
-    { trainingId: '1', employeeId: '6', attended: true, acknowledgment: true },
-    { trainingId: '2', employeeId: '1', attended: false, acknowledgment: false },
-    { trainingId: '2', employeeId: '2', attended: false, acknowledgment: true },
-    { trainingId: '2', employeeId: '3', attended: false, acknowledgment: true },
-    { trainingId: '2', employeeId: '4', attended: false, acknowledgment: false },
-    { trainingId: '3', employeeId: '4', attended: false, acknowledgment: false },
+    { training_id: '1', employee_id: '1', attended: true, acknowledgment: true },
+    { training_id: '1', employee_id: '2', attended: false, acknowledgment: true },
+    { training_id: '1', employee_id: '6', attended: true, acknowledgment: true },
+    { training_id: '2', employee_id: '1', attended: false, acknowledgment: false },
+    { training_id: '2', employee_id: '2', attended: false, acknowledgment: true },
+    { training_id: '2', employee_id: '3', attended: false, acknowledgment: true },
+    { training_id: '2', employee_id: '4', attended: false, acknowledgment: false },
+    { training_id: '3', employee_id: '4', attended: false, acknowledgment: false },
   ]);
 
   const handleLogin = (username: string, password: string) => {
